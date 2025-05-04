@@ -4,9 +4,10 @@ import { QRCodeSVG } from 'qrcode.react';
 
 interface StartScreenProps {
   onStartVR: () => void;
+  onStartPreview: () => void;
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onStartVR }) => {
+const StartScreen: React.FC<StartScreenProps> = ({ onStartVR, onStartPreview }) => {
   const currentUrl = window.location.href;
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -18,13 +19,24 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStartVR }) => {
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4 sm:p-6 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
       <div className="max-w-md w-full">
-        <button 
-          ref={buttonRef}
-          onClick={onStartVR}
-          className="w-full py-4 px-6 mb-6 sm:mb-8 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold transition-colors duration-200 flex items-center justify-center sticky top-0 z-10"
-        >
-          <span>Enter VR Mode</span>
-        </button>
+        <div className="sticky top-0 z-10 space-y-3 bg-gradient-to-b from-gray-900 to-gray-900/90 pt-2 pb-4">
+          <button 
+            onClick={onStartPreview}
+            className="w-full py-3 px-6 bg-gray-700 hover:bg-gray-600 rounded-lg text-white font-semibold transition-colors duration-200 flex items-center justify-center"
+          >
+            <Camera3d size={20} className="mr-2" />
+            <span>Test Camera & Zoom</span>
+          </button>
+          
+          <button 
+            ref={buttonRef}
+            onClick={onStartVR}
+            className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-semibold transition-colors duration-200 flex items-center justify-center"
+          >
+            <Eye size={20} className="mr-2" />
+            <span>Enter VR Mode</span>
+          </button>
+        </div>
         
         <div className="bg-white p-3 sm:p-4 rounded-lg mb-6 sm:mb-8 flex justify-center">
           <QRCodeSVG value={currentUrl} size={200} />

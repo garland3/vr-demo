@@ -1,24 +1,34 @@
+
 import React, { useState } from 'react';
 import VRView from './components/VRView';
 import StartScreen from './components/StartScreen';
+import CameraPreview from './components/CameraPreview';
 
 function App() {
-  const [isVRMode, setIsVRMode] = useState(false);
+  const [mode, setMode] = useState<'start' | 'preview' | 'vr'>('start');
 
-  const handleStartVR = () => {
-    setIsVRMode(true);
+  const handleStartPreview = () => {
+    setMode('preview');
   };
 
-  const handleExitVR = () => {
-    setIsVRMode(false);
+  const handleStartVR = () => {
+    setMode('vr');
+  };
+
+  const handleBack = () => {
+    setMode('start');
   };
 
   return (
     <div className="w-full min-h-screen bg-black text-white">
-      {isVRMode ? (
-        <VRView onExit={handleExitVR} />
-      ) : (
-        <StartScreen onStartVR={handleStartVR} />
+      {mode === 'start' && (
+        <StartScreen onStartVR={handleStartVR} onStartPreview={handleStartPreview} />
+      )}
+      {mode === 'preview' && (
+        <CameraPreview onBack={handleBack} onEnterVR={handleStartVR} />
+      )}
+      {mode === 'vr' && (
+        <VRView onExit={handleBack} />
       )}
     </div>
   );

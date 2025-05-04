@@ -134,6 +134,30 @@ export const useCameraStream = () => {
     };
   }, []);
 
+  const getZoomCapabilities = () => {
+    if (capabilities?.zoom) {
+      return {
+        min: capabilities.zoom.min || 1,
+        max: capabilities.zoom.max || 2,
+        step: capabilities.zoom.step || 0.1
+      };
+    }
+    return null;
+  };
+
+  const isAtMaxZoom = () => {
+    if (capabilities?.zoom) {
+      const zoomCaps = getZoomCapabilities();
+      if (zoomCaps) {
+        // Check if current zoom is at or near max
+        const normalizedValue = (zoom - 0.5) / 2.5; // Our slider range to 0-1
+        const currentZoomValue = zoomCaps.min + normalizedValue * (zoomCaps.max - zoomCaps.min);
+        return currentZoomValue >= (zoomCaps.max - 0.1);
+      }
+    }
+    return false;
+  };
+
   return { 
     stream, 
     error, 
@@ -143,6 +167,8 @@ export const useCameraStream = () => {
     rotateCamera, 
     zoom, 
     updateZoom,
-    hasNativeZoom: Boolean(capabilities?.zoom)
+    hasNativeZoom: Boolean(capabilities?.zoom),
+    isAtMaxZoom,
+    getZoomCapabilities
   };
 };
