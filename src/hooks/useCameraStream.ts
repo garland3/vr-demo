@@ -158,6 +158,21 @@ export const useCameraStream = () => {
     return false;
   };
 
+  // Check if any camera zoom-like capability is available
+  const detectNativeZoom = () => {
+    if (!capabilities) return false;
+    
+    // Check for standard zoom capability
+    if (capabilities.zoom) return true;
+    
+    // Some devices might expose zoom through other properties
+    // Log all capabilities for debugging
+    console.log("Checking for alternative zoom capabilities:", capabilities);
+    
+    // Return false as we don't detect any standard zoom capability
+    return false;
+  };
+
   return { 
     stream, 
     error, 
@@ -167,7 +182,7 @@ export const useCameraStream = () => {
     rotateCamera, 
     zoom, 
     updateZoom,
-    hasNativeZoom: Boolean(capabilities?.zoom),
+    hasNativeZoom: detectNativeZoom(),
     isAtMaxZoom,
     getZoomCapabilities
   };

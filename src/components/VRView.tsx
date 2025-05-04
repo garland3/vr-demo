@@ -190,7 +190,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit }) => {
             />
             <div className="flex flex-col items-center mt-2">
               <span className="text-xs text-gray-300">
-                {hasNativeZoom ? 'Using native camera zoom' : 'Using digital zoom'}
+                {hasNativeZoom ? 'Using native camera zoom' : 'Using digital zoom (native zoom not available on this device)'}
               </span>
               {hasNativeZoom && getZoomCapabilities() && (
                 <span className="text-xs text-gray-400 mt-1">
