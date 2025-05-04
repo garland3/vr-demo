@@ -10,25 +10,25 @@ export const useCameraStream = () => {
 
   const updateCameraZoom = async (value: number) => {
     if (!stream) return;
-    
+
     try {
       const track = stream.getVideoTracks()[0];
       if (track && capabilities?.zoom) {
         // Get the zoom range from capabilities
         const min = capabilities.zoom.min || 1;
         const max = capabilities.zoom.max || 2;
-        
+
         // Map slider value (0.5-3) to the actual camera zoom range
         // This creates a more natural zoom experience with the device's capabilities
         const normalizedValue = (value - 0.5) / 2.5; // Convert to 0-1 scale
         const zoomValue = min + normalizedValue * (max - min);
-        
+
         console.log(`Setting native camera zoom: ${zoomValue} (min: ${min}, max: ${max})`);
-        
+
         await track.applyConstraints({
           advanced: [{ zoom: zoomValue }]
         });
-        
+
         // When using native zoom, we don't need digital zoom
         setZoom(1);
         return true;
@@ -36,7 +36,7 @@ export const useCameraStream = () => {
     } catch (err) {
       console.error('Failed to adjust native camera zoom:', err);
     }
-    
+
     // Fallback to digital zoom if native zoom fails or isn't available
     console.log('Using digital zoom fallback:', value);
     setZoom(value);
@@ -56,8 +56,8 @@ export const useCameraStream = () => {
   const requestPermission = async () => {
     try {
       setError(null);
-      
-      const constraints = {
+
+      const zoomConstraints = {
         video: {
           facingMode: { ideal: 'environment' }, // Use back camera when available
           width: { ideal: window.innerWidth },
@@ -68,20 +68,46 @@ export const useCameraStream = () => {
           advanced: [{ zoom: true }]
         }
       };
-      
-      const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      setStream(mediaStream);
-      setHasPermission(true);
-      
-      // Get camera capabilities
-      const track = mediaStream.getVideoTracks()[0];
-      if (track) {
-        const caps = track.getCapabilities();
-        setCapabilities(caps);
+
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia(zoomConstraints);
+        setStream(mediaStream);
+        setHasPermission(true);
+
+        // Get camera capabilities
+        const track = mediaStream.getVideoTracks()[0];
+        if (track) {
+          const caps = track.getCapabilities();
+          setCapabilities(caps);
+          console.log('Camera capabilities:', caps);
+        }
+      } catch (zoomErr) {
+        console.warn('Failed to get camera with zoom, trying basic camera:', zoomErr);
+
+        // Fallback to basic camera access without zoom
+        const basicConstraints = {
+          video: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: window.innerWidth },
+            height: { ideal: window.innerHeight }
+          }
+        };
+
+        const basicStream = await navigator.mediaDevices.getUserMedia(basicConstraints);
+        setStream(basicStream);
+        setHasPermission(true);
+
+        // Still check capabilities, some cameras report zoom even without requesting it
+        const basicTrack = basicStream.getVideoTracks()[0];
+        if (basicTrack) {
+          const basicCaps = basicTrack.getCapabilities();
+          setCapabilities(basicCaps);
+          console.log('Basic camera capabilities:', basicCaps);
+        }
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
-      
+
       if (err instanceof Error) {
         if (err.name === 'NotAllowedError') {
           setError('Camera access denied. Please grant permission.');
@@ -99,7 +125,7 @@ export const useCameraStream = () => {
   useEffect(() => {
     // Automatically request camera access when component mounts
     requestPermission();
-    
+
     // Cleanup: stop all tracks when unmounted
     return () => {
       if (stream) {

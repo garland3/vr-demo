@@ -8,7 +8,19 @@ interface VRViewProps {
 }
 
 const VRView: React.FC<VRViewProps> = ({ onExit }) => {
-  const { stream, error, hasPermission, requestPermission, rotation, rotateCamera, zoom, updateZoom, hasNativeZoom } = useCameraStream();
+  const { 
+    stream, 
+    error, 
+    hasPermission, 
+    requestPermission, 
+    rotation, 
+    rotateCamera, 
+    zoom, 
+    updateZoom, 
+    hasNativeZoom,
+    isAtMaxZoom,
+    getZoomCapabilities 
+  } = useCameraStream();
   const { orientation, hasPermission: hasOrientationPermission, requestPermission: requestOrientationPermission } = useDeviceOrientation();
   const [showControls, setShowControls] = useState(true);
   const [showZoomSlider, setShowZoomSlider] = useState(false);
@@ -176,9 +188,16 @@ const VRView: React.FC<VRViewProps> = ({ onExit }) => {
               onChange={e => updateZoom(parseFloat(e.target.value))}
               className="w-48 accent-blue-500"
             />
-            <span className="text-xs mt-2 text-gray-300">
-              {hasNativeZoom ? 'Using native camera zoom' : 'Using digital zoom'}
-            </span>
+            <div className="flex flex-col items-center mt-2">
+              <span className="text-xs text-gray-300">
+                {hasNativeZoom ? 'Using native camera zoom' : 'Using digital zoom'}
+              </span>
+              {hasNativeZoom && getZoomCapabilities() && (
+                <span className="text-xs text-gray-400 mt-1">
+                  Camera zoom: {getZoomCapabilities()?.min.toFixed(1)} - {getZoomCapabilities()?.max.toFixed(1)}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       )}
