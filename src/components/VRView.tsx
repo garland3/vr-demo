@@ -117,9 +117,13 @@ const VRView: React.FC<VRViewProps> = ({ onExit }) => {
           <div className="flex gap-2">
             <button 
               onClick={toggleZoomSlider}
-              className="p-2 rounded-full bg-gray-800/80 text-white"
+              className="p-2 rounded-full bg-gray-800/80 text-white relative"
             >
               <ZoomIn size={24} />
+              {hasNativeZoom && (
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full" 
+                      title="Native zoom available"></span>
+              )}
             </button>
             {!isFullscreen && (
               <button 
@@ -162,15 +166,20 @@ const VRView: React.FC<VRViewProps> = ({ onExit }) => {
           className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-800/80 p-4 rounded-lg"
           onClick={e => e.stopPropagation()}
         >
-          <input
-            type="range"
-            min="0.5"
-            max="3"
-            step="0.1"
-            value={zoom}
-            onChange={e => updateZoom(parseFloat(e.target.value))}
-            className="w-48 accent-blue-500"
-          />
+          <div className="flex flex-col items-center">
+            <input
+              type="range"
+              min="0.5"
+              max="3"
+              step="0.1"
+              value={zoom}
+              onChange={e => updateZoom(parseFloat(e.target.value))}
+              className="w-48 accent-blue-500"
+            />
+            <span className="text-xs mt-2 text-gray-300">
+              {hasNativeZoom ? 'Using native camera zoom' : 'Using digital zoom'}
+            </span>
+          </div>
         </div>
       )}
       

@@ -9,23 +9,38 @@ export const useCameraStream = () => {
   const [capabilities, setCapabilities] = useState<MediaTrackCapabilities | null>(null);
 
   const updateCameraZoom = async (value: number) => {
-    if (!stream || !capabilities?.zoom) return;
+    if (!stream) return;
     
     try {
       const track = stream.getVideoTracks()[0];
-      if (track && capabilities.zoom) {
+      if (track && capabilities?.zoom) {
+        // Get the zoom range from capabilities
         const min = capabilities.zoom.min || 1;
-        const max = capabilities.zoom.max || 1;
-        const zoomValue = min + (value - 0.5) * (max - min) / 2.5;
+        const max = capabilities.zoom.max || 2;
+        
+        // Map slider value (0.5-3) to the actual camera zoom range
+        // This creates a more natural zoom experience with the device's capabilities
+        const normalizedValue = (value - 0.5) / 2.5; // Convert to 0-1 scale
+        const zoomValue = min + normalizedValue * (max - min);
+        
+        console.log(`Setting native camera zoom: ${zoomValue} (min: ${min}, max: ${max})`);
+        
         await track.applyConstraints({
           advanced: [{ zoom: zoomValue }]
         });
+        
+        // When using native zoom, we don't need digital zoom
+        setZoom(1);
+        return true;
       }
     } catch (err) {
-      console.error('Failed to adjust camera zoom:', err);
-      // Fallback to digital zoom if camera zoom fails
-      setZoom(value);
+      console.error('Failed to adjust native camera zoom:', err);
     }
+    
+    // Fallback to digital zoom if native zoom fails or isn't available
+    console.log('Using digital zoom fallback:', value);
+    setZoom(value);
+    return false;
   };
 
   const rotateCamera = () => {
@@ -46,7 +61,11 @@ export const useCameraStream = () => {
         video: {
           facingMode: { ideal: 'environment' }, // Use back camera when available
           width: { ideal: window.innerWidth },
-          height: { ideal: window.innerHeight }
+          height: { ideal: window.innerHeight },
+          // Request zoom capability explicitly if available
+          zoom: true,
+          // Some devices support additional advanced features
+          advanced: [{ zoom: true }]
         }
       };
       
