@@ -12,7 +12,7 @@ export const useImageAnalysis = (query: string, intervalSeconds: number) => {
   // Initialize Groq client
   if (!groqClient.current) {
     groqClient.current = new Groq({
-      apiKey: process.env.GROQ_API_KEY || '', // Will need to be set in environment variables
+      apiKey: import.meta.env.VITE_GROQ_API_KEY || '', // Using Vite environment variable
     });
   }
 
