@@ -1,0 +1,91 @@
+ Environment updated. Reloading shell...
+
+> vite-react-typescript-starter@0.0.0 dev
+> vite
+
+Re-optimizing dependencies because lockfile has changed
+
+  VITE v5.4.8  ready in 1039 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://172.31.128.55:5173/
+  ➜  press h + enter to show help
+1:34:03 AM [vite] Pre-transform error: Transform failed with 2 errors:
+/home/runner/workspace/src/hooks/useDeviceOrientation.ts:70:13: ERROR: Multiple exports with the same name "useDeviceOrientation"
+/home/runner/workspace/src/hooks/useDeviceOrientation.ts:70:13: ERROR: The symbol "useDeviceOrientation" has already been declared
+Error:   Failed to scan for dependencies from entries:
+  /home/runner/workspace/index.html
+
+  ✘ [ERROR] Multiple exports with the same name "useDeviceOrientation"
+
+    src/hooks/useDeviceOrientation.ts:70:13:
+      70 │ export const useDeviceOrientation = () => {
+         ╵              ~~~~~~~~~~~~~~~~~~~~
+
+  The name "useDeviceOrientation" was originally exported here:
+
+    src/hooks/useDeviceOrientation.ts:9:13:
+      9 │ export const useDeviceOrientation = () => {
+        ╵              ~~~~~~~~~~~~~~~~~~~~
+
+
+✘ [ERROR] The symbol "useDeviceOrientation" has already been declared
+
+    src/hooks/useDeviceOrientation.ts:70:13:
+      70 │ export const useDeviceOrientation = () => {
+         ╵              ~~~~~~~~~~~~~~~~~~~~
+
+  The symbol "useDeviceOrientation" was originally declared here:
+
+    src/hooks/useDeviceOrientation.ts:9:13:
+      9 │ export const useDeviceOrientation = () => {
+        ╵              ~~~~~~~~~~~~~~~~~~~~
+
+
+    at failureErrorWithLog (/home/runner/workspace/node_modules/esbuild/lib/main.js:1472:15)
+    at /home/runner/workspace/node_modules/esbuild/lib/main.js:945:25
+    at runOnEndCallbacks (/home/runner/workspace/node_modules/esbuild/lib/main.js:1315:45)
+    at buildResponseToResult (/home/runner/workspace/node_modules/esbuild/lib/main.js:943:7)
+    at /home/runner/workspace/node_modules/esbuild/lib/main.js:955:9
+    at new Promise (<anonymous>)
+    at requestCallbacks.on-end (/home/runner/workspace/node_modules/esbuild/lib/main.js:954:54)
+    at handleRequest (/home/runner/workspace/node_modules/esbuild/lib/main.js:647:17)
+    at handleIncomingPacket (/home/runner/workspace/node_modules/esbuild/lib/main.js:672:7)
+    at Socket.readFromStdout (/home/runner/workspace/node_modules/esbuild/lib/main.js:600:7)
+    at Socket.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at Readable.push (node:internal/streams/readable:392:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+1:34:05 AM [vite] Internal server error: Transform failed with 2 errors:
+/home/runner/workspace/src/hooks/useDeviceOrientation.ts:70:13: ERROR: Multiple exports with the same name "useDeviceOrientation"
+/home/runner/workspace/src/hooks/useDeviceOrientation.ts:70:13: ERROR: The symbol "useDeviceOrientation" has already been declared
+  Plugin: vite:esbuild
+  File: /home/runner/workspace/src/hooks/useDeviceOrientation.ts:70:13
+  
+  Multiple exports with the same name "useDeviceOrientation"
+  68 |  }
+  69 |  
+  70 |  export const useDeviceOrientation = () => {
+     |               ^
+  71 |    const [orientation, setOrientation] = useState<DeviceOrientation | null>(null);
+  72 |    const [hasPermission, setHasPermission] = useState(false);
+  
+  The symbol "useDeviceOrientation" has already been declared
+  68 |  }
+  69 |  
+  70 |  export const useDeviceOrientation = () => {
+     |               ^
+  71 |    const [orientation, setOrientation] = useState<DeviceOrientation | null>(null);
+  72 |    const [hasPermission, setHasPermission] = useState(false);
+  
+      at failureErrorWithLog (/home/runner/workspace/node_modules/esbuild/lib/main.js:1472:15)
+      at /home/runner/workspace/node_modules/esbuild/lib/main.js:755:50
+      at responseCallbacks.<computed> (/home/runner/workspace/node_modules/esbuild/lib/main.js:622:9)
+      at handleIncomingPacket (/home/runner/workspace/node_modules/esbuild/lib/main.js:677:12)
+      at Socket.readFromStdout (/home/runner/workspace/node_modules/esbuild/lib/main.js:600:7)
+      at Socket.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
