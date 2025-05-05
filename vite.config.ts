@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
     },
     // Make all environment variables available to the application
     define: {
-      'import.meta.env.VITE_GROQ_API_KEY': JSON.stringify(env.VITE_GROQ_API_KEY),
+      'import.meta.env.GROQ_API': JSON.stringify(env.GROQ_API),
     },
   };
 });
