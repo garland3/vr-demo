@@ -103,71 +103,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
     }
   }, [orientation, hasOrientationPermission, rotation, zoom, hasNativeZoom]);
   
-  // Determine text color based on background brightness
-  const adaptTextColorToBackground = useCallback(() => {
-    if (!leftVideoRef.current || !analysisResult) return;
-    
-    try {
-      // Create a temporary canvas to sample the video at bottom left area
-      const canvas = document.createElement('canvas');
-      const size = 50; // Sample size in pixels
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      
-      if (!ctx) return;
-      
-      // Draw the bottom-left corner of the video to the canvas
-      ctx.drawImage(
-        leftVideoRef.current,
-        0, leftVideoRef.current.videoHeight - size, // Source x,y (bottom left)
-        size, size, // Source width, height
-        0, 0, // Destination x,y
-        size, size // Destination width, height
-      );
-      
-      // Get image data to analyze brightness
-      const imageData = ctx.getImageData(0, 0, size, size);
-      const data = imageData.data;
-      
-      // Calculate average brightness
-      let totalBrightness = 0;
-      for (let i = 0; i < data.length; i += 4) {
-        // Convert RGB to brightness (simple average)
-        const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        totalBrightness += brightness;
-      }
-      
-      const avgBrightness = totalBrightness / (data.length / 4);
-      
-      // Set text color based on brightness (light text on dark background, dark text on light background)
-      const textElement = document.getElementById('ai-analysis-text');
-      if (textElement) {
-        if (avgBrightness < 128) {
-          // Dark background, use light text
-          textElement.style.color = 'white';
-        } else {
-          // Light background, use dark text
-          textElement.style.color = 'black';
-        }
-      }
-    } catch (err) {
-      console.error('Error adapting text color:', err);
-    }
-  }, [analysisResult]);
-  
-  // Run text color adaptation periodically when we have a stream and analysis
-  useEffect(() => {
-    if (!stream || !analysisResult) return;
-    
-    // Initial adaptation
-    adaptTextColorToBackground();
-    
-    // Set up interval for continuous adaptation
-    const intervalId = setInterval(adaptTextColorToBackground, 2000);
-    
-    return () => clearInterval(intervalId);
-  }, [stream, analysisResult, adaptTextColorToBackground]);
+  // No need for text color adaptation as we're using fixed colors now
 
   const handleScreenTap = () => {
     setShowControls(!showControls);
@@ -368,12 +304,12 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
         </div>
       )}
       
-      {/* AI Analysis Results Overlay - Always visible in bottom left */}
+      {/* AI Analysis Results Overlay - Always visible in top left */}
       {analysisResult && (
-        <div className="absolute bottom-4 left-4 max-w-xs bg-black/60 backdrop-blur-sm rounded-lg p-3 text-white text-sm max-h-32 overflow-y-auto">
+        <div className="absolute top-4 left-4 max-w-xs bg-white/80 backdrop-blur-sm rounded-lg p-2 text-xs max-h-28 overflow-y-auto">
           <div className="flex items-start">
-            <Brain size={16} className="mr-2 text-blue-400 mt-1 flex-shrink-0" />
-            <div id="ai-analysis-text" className="whitespace-pre-line">{analysisResult}</div>
+            <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
+            <div className="whitespace-pre-line text-green-600 font-medium">{analysisResult}</div>
           </div>
         </div>
       )}
