@@ -34,6 +34,9 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
   const rightVideoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [lastAnalysisTime, setLastAnalysisTime] = useState<number>(Date.now());
+  const [nextAnalysisTime, setNextAnalysisTime] = useState<number>(Date.now() + aiIntervalSeconds * 1000);
+  const [progress, setProgress] = useState<number>(0); // 0-100 progress until next analysis
 
   // Use the AI analysis hook
   const { 
@@ -89,6 +92,41 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
     }
   }, [stream, rotation, zoom, hasNativeZoom]);
 
+  // Add progress bar timer effect
+  useEffect(() => {
+    // Calculate and update progress every 50ms for smooth animation
+    const progressTimer = setInterval(() => {
+      const now = Date.now();
+      const elapsed = now - lastAnalysisTime;
+      const total = aiIntervalSeconds * 1000;
+      const newProgress = Math.min(100, Math.max(0, (elapsed / total) * 100));
+      setProgress(newProgress);
+    }, 50);
+    
+    return () => clearInterval(progressTimer);
+  }, [lastAnalysisTime, aiIntervalSeconds]);
+  
+  // Listen for analysis events
+  useEffect(() => {
+    const handleAnalysisStarted = (event: CustomEvent) => {
+      setLastAnalysisTime(event.detail.time);
+      setNextAnalysisTime(event.detail.time + aiIntervalSeconds * 1000);
+    };
+    
+    const handleAnalysisCompleted = (event: CustomEvent) => {
+      setLastAnalysisTime(event.detail.time);
+      setNextAnalysisTime(event.detail.time + aiIntervalSeconds * 1000);
+    };
+    
+    window.addEventListener('analysisStarted', handleAnalysisStarted as EventListener);
+    window.addEventListener('analysisCompleted', handleAnalysisCompleted as EventListener);
+    
+    return () => {
+      window.removeEventListener('analysisStarted', handleAnalysisStarted as EventListener);
+      window.removeEventListener('analysisCompleted', handleAnalysisCompleted as EventListener);
+    };
+  }, [aiIntervalSeconds]);
+  
   // Apply device orientation effect to the view
   useEffect(() => {
     if (orientation && hasOrientationPermission) {
@@ -350,16 +388,26 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
         </div>
       )}
 
-      {/* AI Analysis Results Overlay - Always visible in top left */}
+      {/* AI Analysis Results Overlay with Progress Bar - Always visible in top left */}
       {analysisResult && (
-        <div className="absolute top-4 left-4 bg-white/50 backdrop-blur-sm rounded-lg p-2 inline-block" style={{ maxWidth: '45%' }}>
-          <div className="flex items-start">
-            <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
+        <div className="absolute top-4 left-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '45%' }}>
+          {/* Thin Progress Bar */}
+          <div className="h-[2px] bg-gray-300/30 rounded-t-lg overflow-hidden">
             <div 
-              className="whitespace-pre-line text-green-600 font-medium"
-              style={{ fontSize: `${fontSize}px` }}
-            >
-              {analysisResult}
+              className="h-full bg-green-500 transition-all duration-100" 
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          
+          <div className="p-2">
+            <div className="flex items-start">
+              <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
+              <div 
+                className="whitespace-pre-line text-green-600 font-medium"
+                style={{ fontSize: `${fontSize}px` }}
+              >
+                {analysisResult}
+              </div>
             </div>
           </div>
         </div>

@@ -34,6 +34,10 @@ export const useImageAnalysis = (query: string, intervalSeconds: number = 5) => 
       
       // Send to backend API
       setIsAnalyzing(true);
+      // Dispatch event for analysis starting
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('analysisStarted', { detail: { time: Date.now() } }));
+      }
       const response = await fetch('/api/analyze-image', {
         method: 'POST',
         headers: {
@@ -52,6 +56,10 @@ export const useImageAnalysis = (query: string, intervalSeconds: number = 5) => 
       const data = await response.json();
       setAnalysisResult(data.result);
       setError(null);
+      // Dispatch event for analysis completion
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('analysisCompleted', { detail: { time: Date.now() } }));
+      }
     } catch (err) {
       console.error('Error in image analysis:', err);
       setError(err instanceof Error ? err.message : 'Error analyzing image');
