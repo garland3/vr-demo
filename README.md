@@ -48,6 +48,9 @@ Best experienced on mobile devices with:
 - Camera access
 - A Google Cardboard-style VR headset
 
-### 🔗 Try It Out!
 
-[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/garland3/vr-demo)
+
+
+### Dev Path
+* Created with bolt.new
+* Then do to frustrations with trying to develop and view the results on my phone, I switched to Replit.
