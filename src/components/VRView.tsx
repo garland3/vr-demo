@@ -392,7 +392,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
       {analysisResult && (
         <>
           {/* Left eye HUD */}
-          <div className="absolute top-4 left-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '40%', left: 'calc(25% - 10rem)' }}>
+          <div className="absolute top-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '40%', left: '5%' }}>
             {/* Thin Progress Bar */}
             <div className="h-[2px] bg-gray-300/30 rounded-t-lg overflow-hidden">
               <div 
@@ -420,7 +420,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
           </div>
 
           {/* Right eye HUD */}
-          <div className="absolute top-4 right-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '40%', right: 'calc(25% - 10rem)' }}>
+          <div className="absolute top-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '40%', left: '55%' }}>
             {/* Thin Progress Bar */}
             <div className="h-[2px] bg-gray-300/30 rounded-t-lg overflow-hidden">
               <div 
