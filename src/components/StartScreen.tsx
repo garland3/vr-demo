@@ -11,7 +11,7 @@ interface StartScreenProps {
 const StartScreen: React.FC<StartScreenProps> = ({ onStartVR, onStartPreview, onAISettingsChange }) => {
   const currentUrl = window.location.href;
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [aiQuery, setAiQuery] = useState<string>("Are there people and what are they doing?");
+  const [aiQuery, setAiQuery] = useState<string>(import.meta.env.VITE_DEFAULT_AI_PROMPT || "Are there people and what are they doing?");
   const [intervalSeconds, setIntervalSeconds] = useState<number>(10);
 
   useEffect(() => {

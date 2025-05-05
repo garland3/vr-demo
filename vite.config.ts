@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
     // Make all environment variables available to the application
     define: {
       'import.meta.env.GROQ_API': JSON.stringify(env.GROQ_API),
+      'import.meta.env.VITE_DEFAULT_AI_PROMPT': JSON.stringify(env.DEFAULT_AI_PROMPT),
     },
   };
 });
