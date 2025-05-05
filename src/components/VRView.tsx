@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ArrowLeft, Camera, CameraOff, RotateCw, Maximize, ZoomIn, Brain } from 'lucide-react';
+import { ArrowLeft, Camera, CameraOff, RotateCw, Maximize, ZoomIn, Brain, TextSize } from 'lucide-react';
 import { useCameraStream } from '../hooks/useCameraStream';
 import { useDeviceOrientation } from '../hooks/useDeviceOrientation';
 import { useImageAnalysis } from '../hooks/useImageAnalysis';
@@ -28,6 +28,8 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
   const [showControls, setShowControls] = useState(true);
   const [showZoomSlider, setShowZoomSlider] = useState(false);
   const [showAiPanel, setShowAiPanel] = useState(false);
+  const [showFontSizeSlider, setShowFontSizeSlider] = useState(false);
+  const [fontSize, setFontSize] = useState(12); // Default font size in pixels
   const leftVideoRef = useRef<HTMLVideoElement>(null);
   const rightVideoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -109,6 +111,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
     setShowControls(!showControls);
     setShowZoomSlider(false);
     setShowAiPanel(false);
+    setShowFontSizeSlider(false);
   };
 
   const toggleZoomSlider = (e: React.MouseEvent) => {
@@ -121,6 +124,14 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
     e.stopPropagation();
     setShowAiPanel(!showAiPanel);
     setShowZoomSlider(false);
+    setShowFontSizeSlider(false);
+  };
+  
+  const toggleFontSizeSlider = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowFontSizeSlider(!showFontSizeSlider);
+    setShowZoomSlider(false);
+    setShowAiPanel(false);
   };
 
   return (
@@ -170,6 +181,12 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full" 
                       title="AI analysis available"></span>
               )}
+            </button>
+            <button 
+              onClick={toggleFontSizeSlider}
+              className="p-2 rounded-full bg-gray-800/80 text-white relative"
+            >
+              <TextSize size={24} />
             </button>
             <button 
               onClick={toggleZoomSlider}
@@ -246,6 +263,35 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
         </div>
       )}
       
+      {/* Font Size slider */}
+      {showControls && showFontSizeSlider && (
+        <div 
+          className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-gray-800/80 p-4 rounded-lg"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex flex-col items-center">
+            <div className="flex items-center mb-2">
+              <TextSize size={16} className="mr-2 text-blue-400" />
+              <span className="text-white text-sm">AI Text Size</span>
+            </div>
+            <input
+              type="range"
+              min="8"
+              max="20"
+              step="1"
+              value={fontSize}
+              onChange={e => setFontSize(parseInt(e.target.value))}
+              className="w-48 accent-blue-500"
+            />
+            <div className="flex justify-between w-full mt-1">
+              <span className="text-xs text-gray-300">Small</span>
+              <span className="text-xs text-gray-300">{fontSize}px</span>
+              <span className="text-xs text-gray-300">Large</span>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* AI analysis panel */}
       {showControls && showAiPanel && (
         <div 
@@ -306,10 +352,15 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
       
       {/* AI Analysis Results Overlay - Always visible in top left */}
       {analysisResult && (
-        <div className="absolute top-4 left-4 max-w-xs bg-white/80 backdrop-blur-sm rounded-lg p-2 text-xs max-h-28 overflow-y-auto">
+        <div className="absolute top-4 left-4 bg-white/50 backdrop-blur-sm rounded-lg p-2 inline-block" style={{ maxWidth: '45%' }}>
           <div className="flex items-start">
             <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
-            <div className="whitespace-pre-line text-green-600 font-medium">{analysisResult}</div>
+            <div 
+              className="whitespace-pre-line text-green-600 font-medium"
+              style={{ fontSize: `${fontSize}px` }}
+            >
+              {analysisResult}
+            </div>
           </div>
         </div>
       )}
