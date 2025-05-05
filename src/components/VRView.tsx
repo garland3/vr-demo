@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ArrowLeft, Camera, CameraOff, RotateCw, Maximize, ZoomIn, Brain, TextSize } from 'lucide-react';
+import { ArrowLeft, Camera, CameraOff, RotateCw, Maximize, ZoomIn, Brain, Type } from 'lucide-react';
 import { useCameraStream } from '../hooks/useCameraStream';
 import { useDeviceOrientation } from '../hooks/useDeviceOrientation';
 import { useImageAnalysis } from '../hooks/useImageAnalysis';
@@ -34,7 +34,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
   const rightVideoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  
+
   // Use the AI analysis hook
   const { 
     analysisResult, 
@@ -52,13 +52,13 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
-  
+
   // Start AI analysis when stream is available
   useEffect(() => {
     if (stream && leftVideoRef.current) {
       startAnalysis(leftVideoRef.current);
     }
-    
+
     return () => {
       stopAnalysis();
     };
@@ -79,7 +79,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
     if (stream && leftVideoRef.current && rightVideoRef.current) {
       leftVideoRef.current.srcObject = stream;
       rightVideoRef.current.srcObject = stream;
-      
+
       [leftVideoRef.current, rightVideoRef.current].forEach(video => {
         if (video) {
           // Apply manual rotation
@@ -94,17 +94,17 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
     if (orientation && hasOrientationPermission) {
       const rotationY = orientation.gamma / 10;
       const rotationX = orientation.beta / 10;
-      
+
       const applyRotation = (element: HTMLVideoElement | null) => {
         if (!element) return;
         element.style.transform = `rotate(${rotation}deg) rotateY(${rotationY}deg) rotateX(${rotationX}deg) ${!hasNativeZoom ? `scale(${zoom})` : ''}`;
       };
-      
+
       applyRotation(leftVideoRef.current);
       applyRotation(rightVideoRef.current);
     }
   }, [orientation, hasOrientationPermission, rotation, zoom, hasNativeZoom]);
-  
+
   // No need for text color adaptation as we're using fixed colors now
 
   const handleScreenTap = () => {
@@ -119,14 +119,14 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
     setShowZoomSlider(!showZoomSlider);
     setShowAiPanel(false);
   };
-  
+
   const toggleAiPanel = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowAiPanel(!showAiPanel);
     setShowZoomSlider(false);
     setShowFontSizeSlider(false);
   };
-  
+
   const toggleFontSizeSlider = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowFontSizeSlider(!showFontSizeSlider);
@@ -148,7 +148,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
             className="object-cover w-full h-full"
           />
         </div>
-        
+
         {/* Right eye */}
         <div className="w-1/2 h-full overflow-hidden">
           <video 
@@ -170,7 +170,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
           >
             <ArrowLeft size={24} />
           </button>
-          
+
           <div className="flex gap-2">
             <button 
               onClick={toggleAiPanel}
@@ -186,7 +186,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
               onClick={toggleFontSizeSlider}
               className="p-2 rounded-full bg-gray-800/80 text-white relative"
             >
-              <TextSize size={24} />
+              <Type size={24} />
             </button>
             <button 
               onClick={toggleZoomSlider}
@@ -220,7 +220,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
                 <Camera size={24} />
               </button>
             )}
-            
+
             {!hasOrientationPermission && (
               <button 
                 onClick={(e) => { e.stopPropagation(); requestOrientationPermission(); }}
@@ -232,7 +232,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
           </div>
         </div>
       )}
-      
+
       {/* Zoom slider */}
       {showControls && showZoomSlider && (
         <div 
@@ -262,7 +262,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
           </div>
         </div>
       )}
-      
+
       {/* Font Size slider */}
       {showControls && showFontSizeSlider && (
         <div 
@@ -271,7 +271,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
         >
           <div className="flex flex-col items-center">
             <div className="flex items-center mb-2">
-              <TextSize size={16} className="mr-2 text-blue-400" />
+              <Type size={16} className="mr-2 text-blue-400" />
               <span className="text-white text-sm">AI Text Size</span>
             </div>
             <input
@@ -291,7 +291,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
           </div>
         </div>
       )}
-      
+
       {/* AI analysis panel */}
       {showControls && showAiPanel && (
         <div 
@@ -308,40 +308,40 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
                 Updates every {aiIntervalSeconds}s
               </div>
             </div>
-            
+
             <div className="bg-black/50 rounded-md p-3 max-h-48 overflow-y-auto">
               {isAnalyzing && (
                 <div className="flex items-center justify-center py-2">
                   <div className="animate-pulse text-blue-400">Analyzing...</div>
                 </div>
               )}
-              
+
               {!isAnalyzing && analysisResult && (
                 <div className="text-sm text-white whitespace-pre-line">
                   {analysisResult}
                 </div>
               )}
-              
+
               {!isAnalyzing && !analysisResult && !aiError && (
                 <div className="text-sm text-gray-400 italic">
                   Analysis will appear here...
                 </div>
               )}
-              
+
               {aiError && (
                 <div className="text-sm text-red-400">
                   Error: {aiError}
                 </div>
               )}
             </div>
-            
+
             <div className="mt-2 text-xs text-gray-400">
               Query: "{aiQuery}"
             </div>
           </div>
         </div>
       )}
-      
+
       {/* Error message */}
       {error && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-900/80 p-4 rounded-lg max-w-xs text-center">
@@ -349,7 +349,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
           <p>{error}</p>
         </div>
       )}
-      
+
       {/* AI Analysis Results Overlay - Always visible in top left */}
       {analysisResult && (
         <div className="absolute top-4 left-4 bg-white/50 backdrop-blur-sm rounded-lg p-2 inline-block" style={{ maxWidth: '45%' }}>
@@ -364,7 +364,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
           </div>
         </div>
       )}
-      
+
       {/* Center separation line */}
       <div className="absolute top-0 left-1/2 w-px h-full bg-gray-800/30 transform -translate-x-1/2"></div>
     </div>
