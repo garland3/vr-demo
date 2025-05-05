@@ -392,7 +392,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
       {analysisResult && (
         <>
           {/* Left eye HUD */}
-          <div className="absolute top-4 left-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '45%', left: 'calc(25% - 10rem)' }}>
+          <div className="absolute top-4 left-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '40%', left: 'calc(25% - 10rem)' }}>
             {/* Thin Progress Bar */}
             <div className="h-[2px] bg-gray-300/30 rounded-t-lg overflow-hidden">
               <div 
@@ -405,8 +405,13 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
               <div className="flex items-start">
                 <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
                 <div 
-                  className="whitespace-pre-line text-green-600 font-medium"
-                  style={{ fontSize: `${fontSize}px` }}
+                  className="whitespace-pre-wrap text-green-600 font-medium overflow-hidden break-words"
+                  style={{ 
+                    fontSize: `${fontSize}px`,
+                    maxWidth: '100px',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word'
+                  }}
                 >
                   {analysisResult}
                 </div>
@@ -415,7 +420,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
           </div>
 
           {/* Right eye HUD */}
-          <div className="absolute top-4 right-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '45%', right: 'calc(25% - 10rem)' }}>
+          <div className="absolute top-4 right-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '40%', right: 'calc(25% - 10rem)' }}>
             {/* Thin Progress Bar */}
             <div className="h-[2px] bg-gray-300/30 rounded-t-lg overflow-hidden">
               <div 
@@ -428,8 +433,13 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
               <div className="flex items-start">
                 <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
                 <div 
-                  className="whitespace-pre-line text-green-600 font-medium"
-                  style={{ fontSize: `${fontSize}px` }}
+                  className="whitespace-pre-wrap text-green-600 font-medium overflow-hidden break-words"
+                  style={{ 
+                    fontSize: `${fontSize}px`,
+                    maxWidth: '100px',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word'
+                  }}
                 >
                   {analysisResult}
                 </div>
