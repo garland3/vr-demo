@@ -388,29 +388,55 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
         </div>
       )}
 
-      {/* AI Analysis Results Overlay with Progress Bar - Always visible in top left */}
+      {/* AI Analysis Results Overlay with Progress Bar - Shown on both eyes */}
       {analysisResult && (
-        <div className="absolute top-4 left-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '45%' }}>
-          {/* Thin Progress Bar */}
-          <div className="h-[2px] bg-gray-300/30 rounded-t-lg overflow-hidden">
-            <div 
-              className="h-full bg-green-500 transition-all duration-100" 
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-          
-          <div className="p-2">
-            <div className="flex items-start">
-              <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
+        <>
+          {/* Left eye HUD */}
+          <div className="absolute top-4 left-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '45%', left: 'calc(25% - 10rem)' }}>
+            {/* Thin Progress Bar */}
+            <div className="h-[2px] bg-gray-300/30 rounded-t-lg overflow-hidden">
               <div 
-                className="whitespace-pre-line text-green-600 font-medium"
-                style={{ fontSize: `${fontSize}px` }}
-              >
-                {analysisResult}
+                className="h-full bg-green-500 transition-all duration-100" 
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            
+            <div className="p-2">
+              <div className="flex items-start">
+                <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
+                <div 
+                  className="whitespace-pre-line text-green-600 font-medium"
+                  style={{ fontSize: `${fontSize}px` }}
+                >
+                  {analysisResult}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+
+          {/* Right eye HUD */}
+          <div className="absolute top-4 right-4 bg-white/40 backdrop-blur-sm rounded-lg inline-block" style={{ maxWidth: '45%', right: 'calc(25% - 10rem)' }}>
+            {/* Thin Progress Bar */}
+            <div className="h-[2px] bg-gray-300/30 rounded-t-lg overflow-hidden">
+              <div 
+                className="h-full bg-green-500 transition-all duration-100" 
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            
+            <div className="p-2">
+              <div className="flex items-start">
+                <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
+                <div 
+                  className="whitespace-pre-line text-green-600 font-medium"
+                  style={{ fontSize: `${fontSize}px` }}
+                >
+                  {analysisResult}
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Center separation line */}
