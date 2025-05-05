@@ -10,6 +10,12 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       host: true, // Expose to all network interfaces
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+      },
     },
     optimizeDeps: {
       exclude: ['lucide-react'],
