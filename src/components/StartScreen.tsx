@@ -1,20 +1,28 @@
-import React, { useRef, useEffect } from 'react';
-import { Camera as Camera3d, Smartphone, Eye } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { Camera as Camera3d, Smartphone, Eye, Brain } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
 interface StartScreenProps {
   onStartVR: () => void;
   onStartPreview: () => void;
+  onAISettingsChange: (query: string, intervalSeconds: number) => void;
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onStartVR, onStartPreview }) => {
+const StartScreen: React.FC<StartScreenProps> = ({ onStartVR, onStartPreview, onAISettingsChange }) => {
   const currentUrl = window.location.href;
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [aiQuery, setAiQuery] = useState<string>("Are there people and what are they doing?");
+  const [intervalSeconds, setIntervalSeconds] = useState<number>(10);
 
   useEffect(() => {
     // Ensure button is visible on mount
     buttonRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' });
   }, []);
+  
+  useEffect(() => {
+    // Update parent component with AI settings
+    onAISettingsChange(aiQuery, intervalSeconds);
+  }, [aiQuery, intervalSeconds, onAISettingsChange]);
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4 sm:p-6 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
@@ -38,6 +46,45 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStartVR, onStartPreview }) 
           </button>
         </div>
         
+        <div className="bg-gray-800/50 rounded-lg p-4 sm:p-5 mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 flex items-center">
+            <Brain className="mr-3 text-blue-400" size={24} />
+            AI Image Analysis Settings
+          </h2>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="aiQuery" className="block text-sm font-medium text-gray-300 mb-1">
+                Ask AI about what it sees:
+              </label>
+              <textarea
+                id="aiQuery"
+                value={aiQuery}
+                onChange={(e) => setAiQuery(e.target.value)}
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows={2}
+                placeholder="E.g., Are there people and what are they doing?"
+              />
+            </div>
+            <div>
+              <label htmlFor="intervalSeconds" className="block text-sm font-medium text-gray-300 mb-1">
+                Analysis interval (seconds):
+              </label>
+              <div className="flex items-center">
+                <input
+                  id="intervalSeconds"
+                  type="range"
+                  min="2"
+                  max="30"
+                  value={intervalSeconds}
+                  onChange={(e) => setIntervalSeconds(parseInt(e.target.value))}
+                  className="w-full mr-3 accent-blue-500"
+                />
+                <span className="text-white font-medium w-8 text-center">{intervalSeconds}s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="bg-white p-3 sm:p-4 rounded-lg mb-6 sm:mb-8 flex justify-center">
           <QRCodeSVG value={currentUrl} size={200} />
         </div>
