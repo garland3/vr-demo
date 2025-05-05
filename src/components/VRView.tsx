@@ -102,31 +102,31 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
       const newProgress = Math.min(100, Math.max(0, (elapsed / total) * 100));
       setProgress(newProgress);
     }, 50);
-    
+
     return () => clearInterval(progressTimer);
   }, [lastAnalysisTime, aiIntervalSeconds]);
-  
+
   // Listen for analysis events
   useEffect(() => {
     const handleAnalysisStarted = (event: CustomEvent) => {
       setLastAnalysisTime(event.detail.time);
       setNextAnalysisTime(event.detail.time + aiIntervalSeconds * 1000);
     };
-    
+
     const handleAnalysisCompleted = (event: CustomEvent) => {
       setLastAnalysisTime(event.detail.time);
       setNextAnalysisTime(event.detail.time + aiIntervalSeconds * 1000);
     };
-    
+
     window.addEventListener('analysisStarted', handleAnalysisStarted as EventListener);
     window.addEventListener('analysisCompleted', handleAnalysisCompleted as EventListener);
-    
+
     return () => {
       window.removeEventListener('analysisStarted', handleAnalysisStarted as EventListener);
       window.removeEventListener('analysisCompleted', handleAnalysisCompleted as EventListener);
     };
   }, [aiIntervalSeconds]);
-  
+
   // Apply device orientation effect to the view
   useEffect(() => {
     if (orientation && hasOrientationPermission) {
@@ -400,7 +400,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            
+
             <div className="p-2">
               <div className="flex items-start">
                 <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
@@ -408,7 +408,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
                   className="whitespace-pre-wrap text-green-600 font-medium overflow-hidden break-words"
                   style={{ 
                     fontSize: `${fontSize}px`,
-                    maxWidth: '100px',
+                    maxWidth: `${import.meta.env.VITE_HUD_MAX_CHAR_WIDTH || 100}px`,
                     wordBreak: 'break-word',
                     overflowWrap: 'break-word'
                   }}
@@ -428,7 +428,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            
+
             <div className="p-2">
               <div className="flex items-start">
                 <Brain size={14} className="mr-2 text-green-600 mt-1 flex-shrink-0" />
@@ -436,7 +436,7 @@ const VRView: React.FC<VRViewProps> = ({ onExit, aiQuery, aiIntervalSeconds }) =
                   className="whitespace-pre-wrap text-green-600 font-medium overflow-hidden break-words"
                   style={{ 
                     fontSize: `${fontSize}px`,
-                    maxWidth: '100px',
+                    maxWidth: `${import.meta.env.VITE_HUD_MAX_CHAR_WIDTH || 100}px`,
                     wordBreak: 'break-word',
                     overflowWrap: 'break-word'
                   }}
