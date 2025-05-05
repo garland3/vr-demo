@@ -1,15 +1,14 @@
 
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const { Groq } = require('groq-sdk');
+import express from 'express';
+import cors from 'cors';
+import { Groq } from 'groq-sdk';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(express.json({ limit: '50mb' }));
 
 // Initialize Groq client
 const groqClient = new Groq({
